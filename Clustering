@@ -1,0 +1,65 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+df=pd.read_csv(r"C:\Users\sanja\Downloads\Mall_Customers.csv")
+df
+x=df.iloc[:,3:]  # idex location[all th rows, all the columns onward 3]
+x
+plt.title('Unclustered data')
+plt.xlabel('Annual Income')
+plt.ylabel('Spending Score')
+plt.scatter(x['Annual Income (k$)'],x['Spending Score (1-100)'])
+# here we find how many ideal clusters(k value) can be made there are two methods to find this 1st is Elbow method and other is silhaut score
+
+#Elbow method
+from sklearn.cluster import KMeans, AgglomerativeClustering
+km = KMeans(n_clusters=3)
+x.shape
+km.fit_predict(x)
+#Sum squared error(SSE)
+km.inertia_
+sse=[]
+for k in range(1,16):
+    km=KMeans(n_clusters=k)
+    km.fit_predict(x)
+    sse.append(km.inertia_) # here we are storing sse for 1 to 15 in sse list
+sse
+plt.title('Elbow Method')
+plt.xlabel('VAlue of K')
+plt.ylabel('SSE')
+plt.grid()
+plt.xticks(range(1,16))
+plt.plot(range(1,16),sse,marker='.',color='purple')
+from sklearn.metrics import silhouette_score
+silh=[]
+for k in range(2,16): #for 1 their is no nearest cluster present so valueError occurs
+    km=KMeans(n_clusters=k)
+    labels=km.fit_predict(x)
+    score=silhouette_score(x,labels)
+    silh.append(score)
+plt.title('Silhouette Method')
+plt.xlabel('Value of K')
+plt.ylabel('Siht score')
+plt.grid()
+plt.xticks(range(2,16))
+plt.bar(range(2,16),silh,color='purple')
+km = KMeans(n_clusters=5, random_state=0)
+labels=km.fit_predict(x)
+labels
+
+km.cluster_centers_
+cent=km.cluster_centers_
+plt.figure(figsize=(16,9))
+plt.subplot(1,2,1)
+plt.title('Unclustered data')
+plt.xlabel('Annual Income')
+plt.ylabel('Spending Score')
+plt.scatter(x['Annual Income (k$)'],x['Spending Score (1-100)'])
+
+
+plt.subplot(1,2,2)
+plt.title('clustered data')
+plt.xlabel('Annual Income')
+plt.ylabel('Spending Score')
+plt.scatter(x['Annual Income (k$)'],x['Spending Score (1-100)'],c=labels)
+plt.scatter(cent[:,0], cent[:,1],s=100,color = 'k')
+
