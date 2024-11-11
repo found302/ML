@@ -1,0 +1,31 @@
+import pandas as pd
+df= pd.read_csv(r"C:\Users\sanja\Downloads\Heart.csv")
+df
+df.head
+df.head()
+df.shape
+df.isnull()
+df.isnull().sum()
+df.count()
+#gives not null values
+df.dtypes
+df[df==0].count()
+df["Age"].mean()
+newData=df[['Age','Sex','ChestPain','RestBP','Chol']]
+newData
+#Cross Validation
+from sklearn.model_selection import train_test_split
+train, test = train_test_split(df,random_state=0,test_size=0.25)
+#by using random state it creates a seed point and data will shuffle and goes into training and testing dataset                            
+train.shape
+test.shape
+import numpy as np
+#it creates array
+actual = list(np.ones(45))+list(np.zeros(55))
+predicted = list(np.ones(40))+list(np.zeros(52))+list(np.ones(8))
+from sklearn.metrics import ConfusionMatrixDisplay
+ConfusionMatrixDisplay.from_predictions(actual,predicted)
+from sklearn.metrics import classification_report
+print(classification_report(actual,predicted))
+from sklearn.metrics import accuracy_score
+accuracy_score(actual,predicted)
