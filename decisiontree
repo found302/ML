@@ -1,0 +1,32 @@
+import pandas as pd
+df=pd.read_csv(r'C:\Users\Ritika Baranwal\Downloads\Admission_Predict.csv')
+df
+df['Chance of Admit' ]=df['Chance of Admit '].apply(lambda x:1 if x>=0.75 else 0)
+df
+df=df.drop("Chance of Admit " , axis=1)
+df
+X = df[['GRE Score', 'TOEFL Score', 'University Rating', 'SOP', 'LOR ', 'CGPA', 'Research']]
+y = df['Chance of Admit']
+from sklearn.preprocessing import StandardScaler
+scaler=StandardScaler()
+X=scaler.fit_transform(X)
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.25,random_state=42)
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+model=DecisionTreeClassifier()
+model.fit(X_train,y_train)
+y_predict=model.predict(X_test)
+accuracy = accuracy_score(y_test, y_predict)
+conf_matrix = confusion_matrix(y_test, y_predict)
+classification_rep = classification_report(y_test, y_predict)
+
+print(f"Accuracy: {accuracy:.2f}")
+print("Confusion Matrix:\n", conf_matrix)
+print("Classification Report:\n", classification_rep)
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(20,10))
+plot_tree(model, filled=True,max_depth=2)
+plt.show()
